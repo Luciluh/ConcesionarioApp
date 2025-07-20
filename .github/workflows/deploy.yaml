@@ -64,7 +64,6 @@ jobs:
           } else {
             Write-Host "✅ ACR $env:ACR_NAME ya existe"
           }
-
           # Verificar y crear clúster AKS
           if (-not (az aks show --name $env:AKS_CLUSTER_NAME --resource-group $env:RG_AKS_NAME 2>$null)) {
             Write-Host "➕ Creando clúster AKS: $env:AKS_CLUSTER_NAME"
@@ -77,7 +76,15 @@ jobs:
               --attach-acr $env:ACR_NAME
           } else {
             Write-Host "✅ Clúster AKS $env:AKS_CLUSTER_NAME ya existe"
+
+            # 🔐 Asegurar que el ACR esté vinculado incluso si ya existía el clúster
+            Write-Host "🔄 Asegurando la vinculación del ACR con el AKS"
+            az aks update `
+              --name $env:AKS_CLUSTER_NAME `
+              --resource-group $env:RG_AKS_NAME `
+              --attach-acr $env:ACR_NAME
           }
+
 
       - name: Login to ACR
         run: az acr login --name $ACR_NAME
