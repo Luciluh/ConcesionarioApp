@@ -16,4 +16,4 @@ spec:
       - name: concesionario
         image: concesionarioarc.azurecr.io/concesionario-app:latest
         imagePullPolicy: Always
-        command: ["java", "-jar", "ConcesionarioApp.jar"]
+        command: ["sleep", "infinity"]
