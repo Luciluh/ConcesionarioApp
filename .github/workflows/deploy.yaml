@@ -100,6 +100,7 @@ jobs:
       - name: Deploy app to AKS
         shell: pwsh
         run: |
+          $imageName = "$env:ACR_LOGIN_SERVER/$env:IMAGE_NAME:latest"
           $deploymentYaml = @"
 apiVersion: apps/v1
 kind: Deployment
@@ -117,7 +118,7 @@ spec:
     spec:
       containers:
       - name: concesionario
-        image: $env:ACR_LOGIN_SERVER/${{ env.IMAGE_NAME }}:latest
+        image: $imageName
         imagePullPolicy: Always
         command: ["java", "-jar", "ConcesionarioApp.jar"]
 "@
