@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: concesionario-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: concesionario
+  template:
+    metadata:
+      labels:
+        app: concesionario
+    spec:
+      containers:
+      - name: concesionario
+        image: luciaacr.azurecr.io/concesionario:latest
+        imagePullPolicy: Always
+        command: ["java", "-jar", "ConcesionarioApp.jar"]
