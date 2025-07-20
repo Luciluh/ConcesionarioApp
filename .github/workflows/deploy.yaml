@@ -102,4 +102,21 @@ jobs:
       - name: Get AKS credentials and deploy manifests
         run: |
           az aks get-credentials -n $AKS_CLUSTER_NAME -g $RG_AKS_NAME --overwrite-existing
-          kubectl apply -f ./ConcesionarioApp/k8s/
+          kubectl apply -f ./k8s/deployment.yaml
+          kubectl apply -f ./k8s/service.yaml
+          kubectl apply -f ./k8s/ingress.yaml
+      
+      - name: Wait for Ingress IP  # Esperar un poco para la IP
+        shell: pwsh
+        run: |
+          $maxRetries = 30
+          for ($i = 1; $i -le $maxRetries; $i++) {
+            $ip = kubectl get ingress concesionario-ingress -o jsonpath="{.status.loadBalancer.ingress[0].ip}"
+            if (![string]::IsNullOrEmpty($ip)) {
+              Write-Host "Ingress IP: $ip"
+              break
+            }
+            Write-Host "Waiting for ingress IP... [$i/$maxRetries]"
+            Start-Sleep -Seconds 10
+          }
+

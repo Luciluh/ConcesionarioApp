@@ -14,6 +14,6 @@ spec:
     spec:
       containers:
       - name: concesionario
-        image: luciaacr.azurecr.io/concesionario:latest
+        image: concesionarioarc.azurecr.io/concesionario-app:latest
         imagePullPolicy: Always
         command: ["java", "-jar", "ConcesionarioApp.jar"]
