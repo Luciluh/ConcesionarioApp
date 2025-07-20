@@ -101,26 +101,26 @@ jobs:
         shell: pwsh
         run: |
           $imageName = "$env:ACR_LOGIN_SERVER/$env:IMAGE_NAME:latest"
-          $deploymentYaml = @"
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: concesionario-deployment
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: concesionario
-  template:
-    metadata:
-      labels:
-        app: concesionario
-    spec:
-      containers:
-      - name: concesionario
-        image: $imageName
-        imagePullPolicy: Always
-        command: ["java", "-jar", "ConcesionarioApp.jar"]
-"@
-          $deploymentYaml | Out-File -Encoding utf8 deployment.yaml
+          $content = @(
+            "apiVersion: apps/v1"
+            "kind: Deployment"
+            "metadata:"
+            "  name: concesionario-deployment"
+            "spec:"
+            "  replicas: 1"
+            "  selector:"
+            "    matchLabels:"
+            "      app: concesionario"
+            "  template:"
+            "    metadata:"
+            "      labels:"
+            "        app: concesionario"
+            "    spec:"
+            "      containers:"
+            "      - name: concesionario"
+            "        image: $imageName"
+            "        imagePullPolicy: Always"
+            "        command: [\"java\", \"-jar\", \"ConcesionarioApp.jar\"]"
+          )
+          $content | Set-Content -Encoding UTF8 deployment.yaml
           kubectl apply -n $env:NAMESPACE -f deployment.yaml
